@@ -23,7 +23,7 @@ module Provisioning
         # If the chef server lives on localhost, tunnel the port through to the guest
         # (we need to know what got tunneled!)
         chef_server_url = chef_server[:chef_server_url]
-        chef_server_url = machine.make_url_available_to_remote(chef_server_url)
+        #chef_server_url = machine.make_url_available_to_remote(chef_server_url)
 
         # Support for multiple ohai hints, required on some platforms
         create_ohai_files(action_handler, machine)
