@@ -15,14 +15,21 @@ module Provisioning
       end
 
       def setup_convergence(action_handler, machine)
-        # Create keys on machine
-        public_key = create_keys(action_handler, machine)
-        # Create node and client on chef server
-        create_chef_objects(action_handler, machine, public_key)
+        
+        
+        if chef_server[:validation_client_name].nil?
+          # Create keys on machine
+          public_key = create_keys(action_handler, machine)
+          # Create node and client on chef server
+          create_chef_objects(action_handler, machine, public_key)
+        else
+          copy_validation_keys(action_handler, machine)
+        end
 
         # If the chef server lives on localhost, tunnel the port through to the guest
         # (we need to know what got tunneled!)
         chef_server_url = chef_server[:chef_server_url]
+        #comment it for using chef_server_url directly
         #chef_server_url = machine.make_url_available_to_remote(chef_server_url)
 
         # Support for multiple ohai hints, required on some platforms
@@ -52,6 +59,14 @@ module Provisioning
       end
 
       protected
+      
+      
+      def copy_validation_keys(action_handler, machine)
+        validation_key_loc = chef_server[:validation_key] || "/etc/chef/validator.pem"
+        validation_key_content = machine.read_file(validation_key_loc)
+        
+        machine.write_file(action_handler, validation_key_loc, validation_key_content, :ensure_dir => true)
+      end
 
       def create_keys(action_handler, machine)
         server_private_key = machine.read_file(convergence_options[:client_pem_path])
@@ -171,7 +186,7 @@ module Provisioning
 
       def client_rb_content(chef_server_url, node_name)
         if chef_server_url.downcase.start_with?("https")
-          ssl_verify_mode = ':verify_peer'
+          ssl_verify_mode = ':verify_none'
         else
           ssl_verify_mode = ':verify_none'
         end

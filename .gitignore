@@ -9,3 +9,5 @@ Gemfile.lock
 .idea
 docs/examples/nodes
 docs/examples/clients
+/.project
+/.gitignore
