@@ -198,7 +198,7 @@ module Provisioning
         if validation_client_name.nil?
           validation_content = ""
         else
-          validation_content = "validation_client_name #{validation_client_name}"
+          validation_content = "validation_client_name \"#{validation_client_name}\""
         end
         
         <<EOM
