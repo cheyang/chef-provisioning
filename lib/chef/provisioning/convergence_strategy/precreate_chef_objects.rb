@@ -66,7 +66,7 @@ module Provisioning
       
       
       def copy_validation_keys(action_handler, machine)
-        validation_key_loc = chef_server[:options][:validation_key] || "/etc/chef/validator.pem"
+        validation_key_loc = chef_server[:options][:validation_key] || "/etc/chef/validation.pem"
         validation_key_content = machine.read_file(validation_key_loc)
         
         machine.write_file(action_handler, validation_key_loc, validation_key_content, :ensure_dir => true)
