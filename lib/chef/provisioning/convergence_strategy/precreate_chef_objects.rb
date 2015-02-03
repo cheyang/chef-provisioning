@@ -17,7 +17,7 @@ module Provisioning
       def setup_convergence(action_handler, machine)
         
         
-        if chef_server[:validation_client_name].nil?
+        if validation_client_name.nil?
           # Create keys on machine
           public_key = create_keys(action_handler, machine)
           # Create node and client on chef server
@@ -60,9 +60,13 @@ module Provisioning
 
       protected
       
+      def validation_client_name
+        @validation_client_name ||= chef_server[:options][:validation_client_name]
+      end
+      
       
       def copy_validation_keys(action_handler, machine)
-        validation_key_loc = chef_server[:validation_key] || "/etc/chef/validator.pem"
+        validation_key_loc = chef_server[:options][:validation_key] || "/etc/chef/validator.pem"
         validation_key_content = machine.read_file(validation_key_loc)
         
         machine.write_file(action_handler, validation_key_loc, validation_key_content, :ensure_dir => true)
@@ -191,10 +195,10 @@ module Provisioning
           ssl_verify_mode = ':verify_none'
         end
         
-        if chef_server[:validation_client_name].nil?
+        if validation_client_name.nil?
           validation_content = ""
         else
-          validation_content = "validation_client_name #{chef_server[:validation_client_name]}"
+          validation_content = "validation_client_name #{validation_client_name}"
         end
         
         <<EOM
