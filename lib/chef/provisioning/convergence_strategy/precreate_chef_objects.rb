@@ -190,12 +190,19 @@ module Provisioning
         else
           ssl_verify_mode = ':verify_none'
         end
-
+        
+        if chef_server[:validation_client_name].nil?
+          validation_content = ""
+        else
+          validation_content = "validation_client_name #{chef_server[:validation_client_name]}"
+        end
+        
         <<EOM
 chef_server_url #{chef_server_url.inspect}
 node_name #{node_name.inspect}
 client_key #{convergence_options[:client_pem_path].inspect}
 ssl_verify_mode #{ssl_verify_mode}
+#{validation_content}
 EOM
       end
     end
