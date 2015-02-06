@@ -4,6 +4,7 @@ require 'fileutils'
 require 'digest/md5'
 require 'thread'
 require 'chef/http/simple'
+require 'net/http'
 
 class Chef
 module Provisioning
@@ -103,7 +104,8 @@ module Provisioning
         #
         # Figure out the URL to the metadata
         #
-        metadata_url="https://www.opscode.com/chef/metadata"
+        #disable https for downloading
+        metadata_url="http://www.opscode.com/chef/metadata"
         metadata_url << "?v=#{@chef_version}"
         metadata_url << "&prerelease=#{@prerelease ? 'true' : 'false'}"
         metadata_url << "&p=#{platform.strip}"
@@ -120,7 +122,15 @@ module Provisioning
         # Download and parse the metadata
         Chef::Log.debug("Getting metadata for machine #{machine.node['name']}: #{metadata_url}")
         uri = URI(metadata_url)
-        metadata_str = Chef::HTTP::Simple.new(uri).get(uri)
+        http_client = ::Net::HTTP.new(uri.host, uri.port)
+        http_client.use_ssl = uri.scheme.downcase == 'https'
+        http_client.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        request = Net::HTTP::Get.new(metadata_url)
+        metadata_str = nil
+        
+        response = http_client.start { |client| client.request(request) }
+        metadata_str = response.body
+        #metadata_str = Chef::HTTP::Simple.new(uri).get(uri)
         metadata = {}
         metadata_str.each_line do |line|
           key, value = line.split("\t", 2)
