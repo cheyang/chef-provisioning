@@ -21,7 +21,7 @@ class MachineExecute < Chef::Provider::LWRPBase
       if new_resource.machine.kind_of?(Chef::Provisioning::Machine)
         new_resource.machine
       else
-        run_context.chef_provisioning.connect_to_machine(new_resource.machine, new_resource.chef_server)
+        run_context.chef_provisioning.connect_to_machine(new_resource.machine, new_resource.chef_server, new_resource.machine_options)
       end
     end
   end

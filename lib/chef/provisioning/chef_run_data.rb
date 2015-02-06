@@ -91,13 +91,13 @@ module Provisioning
       driver.is_a?(String) ? driver_for_url(driver) : driver
     end
 
-    def connect_to_machine(name, chef_server = nil)
+    def connect_to_machine(name, chef_server = nil, machine_options ={})
       if name.is_a?(MachineSpec)
         machine_spec = name
       else
         machine_spec = Chef::Provisioning::ChefMachineSpec.get(name, chef_server)
       end
-      Chef::Provisioning.connect_to_machine(machine_spec, config)
+      Chef::Provisioning.connect_to_machine(machine_spec, config, machine_options)
     end
 
     private

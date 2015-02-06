@@ -19,6 +19,9 @@ class MachineExecute < Chef::Resource::LWRPBase
 
   attribute :command, :kind_of => String, :name_attribute => true
   attribute :machine, :kind_of => String
+  
+  # Machine options
+  attribute :machine_options, :kind_of => Hash
 
   attribute :chef_server, :kind_of => Hash
   attribute :driver, :kind_of => Chef::Provisioning::Driver
