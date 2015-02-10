@@ -5,7 +5,7 @@ doc
 bin
 Gemfile.lock
 .yardoc
-*.gem
+/*.gem
 .idea
 docs/examples/nodes
 docs/examples/clients
