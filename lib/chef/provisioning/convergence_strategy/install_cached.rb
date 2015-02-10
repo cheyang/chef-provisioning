@@ -44,7 +44,7 @@ module Provisioning
         super
 
         # Install chef-client.  TODO check and update version if not latest / not desired
-        if machine.execute_always('chef-client -v').exitstatus != 0
+        if machine.execute_always('sudo chef-client -v').exitstatus != 0
           platform, platform_version, machine_architecture = machine.detect_os(action_handler)
           package_file = download_package_for_platform(action_handler, machine, platform, platform_version, machine_architecture)
           remote_package_file = "#{@tmp_dir}/#{File.basename(package_file)}"
@@ -58,7 +58,7 @@ module Provisioning
 
         action_handler.open_stream(machine.node['name']) do |stdout|
           action_handler.open_stream(machine.node['name']) do |stderr|
-            command_line = "chef-client"
+            command_line = "sudo chef-client"
             command_line << " -l #{config[:log_level].to_s}" if config[:log_level]
             machine.execute(action_handler, command_line,
               :stream_stdout => stdout,
