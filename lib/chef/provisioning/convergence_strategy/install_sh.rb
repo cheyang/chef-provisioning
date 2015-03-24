@@ -42,6 +42,7 @@ module Provisioning
           action_handler.open_stream(machine.node['name']) do |stderr|
             command_line = "chef-client"
             command_line << " -l #{config[:log_level].to_s}" if config[:log_level]
+            command_line << " -L /chef_client_#{Time.now.strftime("%Y%m%d%H%M%S")}"
             machine.execute(action_handler, command_line,
               :stream_stdout => stdout,
               :stream_stderr => stderr,
