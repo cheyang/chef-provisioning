@@ -155,7 +155,10 @@ class Machine < Chef::Provider::LWRPBase
     json = node_driver.new_json
     json['normal']['chef_provisioning'] = node_driver.current_json['normal']['chef_provisioning']
     # use the driver url from the resource, if it's defined
+    begin
     json['normal']['chef_provisioning']['location']['driver_url'] = new_resource.driver unless new_resource.driver.nil?
+    rescue
+    end
     @machine_spec = Chef::Provisioning::ChefMachineSpec.new(json, new_resource.chef_server)
   end
 
