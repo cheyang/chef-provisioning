@@ -92,6 +92,7 @@ module Provisioning
       #node = machine_spec.node["automatic"]
       #machine_options["ssh_options"]["ip_address"] = node["ipaddress"] unless (node.nil? or node["ipaddress"].nil?)
       machine_options = Cheffish::MergedConfig.new(config[:machine_options], machine_options) if config[:machine_options]
+      machine_options["ip_address"] = machine_spec.node["automatic"]["ipaddress"] unless machine_spec.node["automatic"]["ipaddress"].nil?
       driver.connect_to_machine(machine_spec, machine_options)
     else
       nil
