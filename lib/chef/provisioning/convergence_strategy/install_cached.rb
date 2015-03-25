@@ -59,7 +59,7 @@ module Provisioning
         action_handler.open_stream(machine.node['name']) do |stdout|
           action_handler.open_stream(machine.node['name']) do |stderr|
             command_line = "sudo bash -c \""
-            command_line << "chef-client -l #{config[:log_level].to_s}" if config[:log_level]
+            command_line << "set -o pipefail;chef-client -l #{config[:log_level].to_s}" if config[:log_level]
             command_line << "|tee /chef_client_#{Time.now.strftime("%Y%m%d%H%M%S")}.log\""
             machine.execute(action_handler, command_line,
               :stream_stdout => stdout,
