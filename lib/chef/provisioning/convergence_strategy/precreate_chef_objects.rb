@@ -69,7 +69,7 @@ module Provisioning
         validation_key_loc = chef_server[:options][:validation_key] || "/etc/chef/validation.pem"
         validation_key_content = ::File.read(validation_key_loc)
         
-        machine.write_file(action_handler, validation_key_loc, validation_key_content, :ensure_dir => true)
+        machine.write_file(action_handler, "/etc/chef/validation.pem", validation_key_content, :ensure_dir => true)
       end
 
       def create_keys(action_handler, machine)
